@@ -4,7 +4,7 @@
  * @Author: chl
  * @Date: 2023-03-01 10:20:06
  * @LastEditors: chl
- * @LastEditTime: 2023-03-04 23:25:21
+ * @LastEditTime: 2023-03-05 17:38:51
 -->
 
 ###基本数据类型介绍
@@ -145,6 +145,34 @@ ECStack.pop(<f> functionContext)
 ####this
 函数运行时所在的环境
 
+```js
+var name = "The Window";
+var object = {
+  name: "My Object",
+  getNameFunc: function() {
+    return function() {
+      return this.name;
+    };
+  },
+};
+alert(object.getNameFunc()()); //window;
+```
+
+```js
+改变this的指向;
+var name = "The Window";
+var object = {
+  name: "My Object",
+  getNameFunc: function() {
+    return function() {
+      console.log(this);
+      return this.name;
+    };
+  },
+};
+object.getNameFunc().call(object);
+```
+
 ####执行上下文中作用域链和变量对象的创建过程
 1、函数创建，保存作用域链到属性
 2、执行函数，创建执行上下文，被压入执行上下文栈
@@ -189,7 +217,24 @@ function clone(target, map = new Map()) {
 ###原型和原型链
 原型：每一个 javascript 对象在创建的时候都会与另一个对象相关联，这个对象就是原型，每一个对象都会从原型中继承属性，也就是 prototype 对象
 
-原型链：由相互关联的原型组成的链式结构就是原型链
+原型链：由相互关联的原型组成的链式结构就是原型链(一个实例的*proto*指向构造函数的原型对象，而构造函数原型对象的*proto*指向其构造函数的原型对像)
+
+function SuperType(){
+this.property = true;
+}
+SuperType.prototype.getSuperValue = function(){
+return this.property;
+};
+function SubType(){
+this.subproperty = false;
+}
+//继承了 SuperType
+SubType.prototype = new SuperType();
+SubType.prototype.getSubValue = function (){
+return this.subproperty;
+};
+var instance = new SubType();
+alert(instance.getSuperValue());
 
 ```
 Person.prototype.constructor = Person
@@ -199,7 +244,7 @@ Object.prototype._proto_ = null
 ```
 
 ###闭包
-在函数创建执行上下文的时候，将父级的活动对象加到内部属性中，形成作用域链，所以即便在父级执行上下文被销毁后，因为活动对象被储存在内存中能被函数访问到，由此形成了闭包
+在函数创建执行上下文的时候，将父级的活动对象加到内部属性中，形成作用域链，所以即便在父级执行上下文被销毁后，因为活动对象（父级作用域的）被储存在内存中能被函数访问到，由此形成了闭包
 
 ####闭包的应用
 
@@ -256,24 +301,6 @@ console.log(this.value)
 }
 fn.call(obj);
 
-```
-
-###new 的实现
-
-```
-1、创建一个空对象
-2、根据原型链，设置空对象的_proto_属性构造函数的prototype
-3、将this指向空对象，并执行构造函数（给新对象添加属性）
-4、判断函数返回值的类型，返回对象
-```
-
-```
-function myNew(context){
-    const obj = new Object();
-    obj._proto_ = context.prototype;
-    const res = context.apply(obj,[...arguments].slice(1));
-    return typeof res ===  "object" ? res : obj;
-}
 ```
 
 ###事件循环
@@ -364,4 +391,117 @@ return 1;
 return num * arguments.callee(num-1)
 }
 }
+```
+
+###创建对象
+
+#####1、工厂模式
+
+```
+function createPerson(name, age){
+    var o = new Object();
+    o.name=name;
+    o.age = age;
+    return o;
+}
+var person1 = createPerson("John",12)
+```
+
+#####2、构造函数模式
+
+```
+function Person(name,age){
+    this.name = name;
+    this.age = age;
+}
+var person1 = new Person("John",12)
+```
+
+#####new 的实现
+
+```
+1、创建一个空对象
+2、根据原型链，设置空对象的_proto_属性构造函数的prototype
+3、将this指向空对象，在空对象的作用域执行构造函数（给新对象添加属性）
+4、判断函数返回值的类型，返回对象
+```
+
+```
+function myNew(context){
+    const obj = new Object();
+    obj._proto_ = context.prototype;
+    const res = context.apply(obj,[...arguments].slice(1));
+    return typeof res ===  "object" ? res : obj;
+}
+```
+
+#####两者的区别
+
+```js
+先在person1属性中找，没有再去_proto_找，而person1._proto_ = Person.prototype;Person.prototype.constructor = Person =>
+person1.constructoe = Person;
+
+由此可以解决对象识别的问题;
+```
+
+#####原型模式
+
+```js
+定义：创建构造函数的时候有一个属性prototype指向了原型对象，原型对象保存了constructor和实例所共享的属性和方法，属性constructor所包含的指针执行了构造函数，实例有一个_proto_属性也指向了原型对象
+由此得出：
+Person.prototype = person1._proto_
+Person.prototype.constructor = Person
+
+当实例添加一个属性，就会屏蔽原型对象中同名的属性，哪怕是赋值null，也一样，只有delete掉实例中的属性，才能恢复与原型对象的连接
+
+优点：能让实例共享属性和方法，同时保持封装性
+
+Object.keys()遍历所有可枚举的属性
+```
+
+#####字面量重写原型对象
+
+```js
+person1.constructor == Person; //false
+也就是说没法确定实例的类型;
+需要在字面量中指定constructor指向构造函数;
+
+function Person() {}
+Person.prototype = {
+  constructor: Person,
+  name: "Nicholas",
+  age: 29,
+  job: "Software Engineer",
+  sayName: function() {
+    alert(this.name);
+  },
+};
+构造函数创建实例时产生的prototype指向原型对象，现在指向一个新的对象，所以切断了构造函数和原型对象之间的联系需要重新指定，但添加了constructor: Person 也是指向新的Person 原型
+```
+
+###继承
+
+通过原型链实现继承，一个实例指向构造函数的原型对象，原型对象指向另一个构造函数的原型
+
+```
+检测继承某原型的实例的方法：
+instanceof
+isPrototypeOf
+
+组合式继承：通过原型链实现对原型属性和方法的继承（缺点是因为共用导致会相互影响），通过构造函数实现对实例对象的继承（缺点是没法实现函数或属性复用），这样既实现了复用，又让实例有自己的属性
+
+  function SuperType(name) {
+    this.name = name;
+  }
+  function SupType(name, age) {
+    SuperType.call(this, name);//构造函数
+    this.age = age;
+  }
+  SuperType.prototype.sayAge = function() {
+    console.log(this.age);
+  };//原型链
+  SupType.prototype = new SuperType();
+  var instance = new SupType("jack", 12);
+  console.log(instance.name);
+  instance.sayAge();
 ```
