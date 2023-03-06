@@ -3,8 +3,8 @@
  * @version:
  * @Author: chl
  * @Date: 2023-03-01 10:20:06
- * @LastEditors: chl
- * @LastEditTime: 2023-03-05 17:38:51
+ * @LastEditors: 谢树宏 384180258@qq.com
+ * @LastEditTime: 2023-03-06
 -->
 
 ###基本数据类型介绍
@@ -146,11 +146,11 @@ ECStack.pop(<f> functionContext)
 函数运行时所在的环境
 
 ```js
-var name = "The Window";
+var name = 'The Window';
 var object = {
-  name: "My Object",
-  getNameFunc: function() {
-    return function() {
+  name: 'My Object',
+  getNameFunc: function () {
+    return function () {
       return this.name;
     };
   },
@@ -160,11 +160,11 @@ alert(object.getNameFunc()()); //window;
 
 ```js
 改变this的指向;
-var name = "The Window";
+var name = 'The Window';
 var object = {
-  name: "My Object",
-  getNameFunc: function() {
-    return function() {
+  name: 'My Object',
+  getNameFunc: function () {
+    return function () {
       console.log(this);
       return this.name;
     };
@@ -505,3 +505,37 @@ isPrototypeOf
   console.log(instance.name);
   instance.sayAge();
 ```
+
+###事件流：从页面接收事件的顺序
+
+1、事件冒泡： 从文档嵌入最深层的节点开始，一层一层向外传递，到 body、html、document
+2、事件捕获：document 最先接收到事件，然后按节点树一层一层往下传递，直到某个节点
+3、DOM 事件流的过程：事件捕获、事件处理、事件冒泡
+4、DOM2 级事件处理程序的方法：addEventListener、removeEventListener，传入三个参数：事件程序名、事件处理函数名、true(捕获阶段处理函数)/false(冒泡阶段处理)
+
+```js
+var btn = document.getElementById('myBtn');
+var handler = function () {
+  alert(this.id);
+};
+btn.addEventListener('click', handler, false);
+//这里省略了其他代码
+btn.removeEventListener('click', handler, false);
+```
+
+5、事件对象（event）：创建事件的时候，会产生一个对象，里面包含事件的所有信息
+6、阻止事件冒泡/捕获:event.stopPropagation()
+7、IE 阻止事件冒泡：cancelBubble
+
+```js
+var btn = document.getElementById('myBtn');
+btn.onclick = function (event) {
+  alert('Clicked');
+  event.stopPropagation();
+};
+document.body.onclick = function (event) {
+  alert('Body clicked');
+};
+```
+
+8、事件委托：利用事件冒泡，只指定一个事件处理程序就可以某一类的所有事件

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <div id="app">
+      <div ref="box"></div>
+      <button @click="change">点击{{a}}</button>
+    </div>
+  </body>
+</html>
+<script>
+  Vue.component('todo-item', {
+    props: ['todo'],
+    template: '<li>这是一个待办项{{todo.text}}</li>',
+  });
+  var app = new Vue({
+    el: '#app',
+    data() {
+      return {
+        a: 1,
+      };
+    },
+    methods: {
+      change() {
+        this.a = 2;
+      },
+    },
+    beforeCreate() {
+      console.log(a); //实例初始化，this指向实例，不能访问data、watch、computed、methods中的数据和方法，常用于初始化非响应式变量
+    },
+    created() {
+      console.log(this.a);
+      console.log(this.$refs); //创建完实例，可以访问数据，但没有挂载到DOM，可用于axios请求
+    },
+    beforeMount() {
+      //挂载到DOM前调用，编译成Render函数
+    },
+    mounted() {
+      console.log(this.$refs, 'mounted'); //实例挂载到了DOM,可以访问元素节点，可以用于获取node信息、axios请求结果
+    },
+    beforeUpdate() {
+      console.log(this.a, 'beforeUpdate'); //更改响应式数据，但视图未重新渲染时调用，用于更新前访问DOM，比如手动移除已添加的事件监听
+    },
+    updated() {
+      console.log('updated'); //视图重新渲染后调用，可执行依赖于DOM的操作
+    },
+    beforeDestroy() {}, //实例销毁前调用，用于销毁定时器、接触全局事件等操作
+    destroyed() {}, //实例销毁后调用
+  });
+</script>
