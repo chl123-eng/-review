@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <div id="app">
+      <p>computed属性{{msgChanged}}</p>
+      <p>computed属性深度监听{{obj.name}}</p>
+      <button @click="changeObj">watch监听obj</button>
+    </div>
+  </body>
+</html>
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      msg: 'hello',
+      obj: {
+        name: 'jack',
+        age: 12,
+      },
+      arr: [1, 2, 3],
+    },
+    //computed可以设置一个值，基于响应式属性进行缓存的，当依赖的属性发生改变的时候，他的值才会重新计算。应用场景：需要通过计算且依赖其他值，可以利用computed的缓存属性，不用每次都计算，提高性能
+    computed: {
+      msgChanged: function () {
+        return this.msg + ' world';
+      },
+    },
+    //watch监听器：监听某个属性变化时可以执行回调函数，deep属性值可以监听对象内部数值的变化（array不用深度监听），immediate返回当前属性未变化前的值。
+    // 应用场景: 当数据变化时执行异步，这是计算属性无法实现的，或者开销较大的操作
+    watch: {
+      // obj: function () {
+      //   console.log(this.obj, '不加deep'); //监听不到对象内部发生的变化
+      // },
+      msg: function () {
+        console.log(this.msg);
+      },
+      obj: {
+        handler: function (oldValue, newValue) {
+          console.log(this.obj, '深度监听');
+        },
+        deep: true,
+        immediate: true,
+      },
+      arr: function () {
+        console.log(this.arr, 'arr监听');
+      },
+    },
+
+    // created() {
+    //   this.$watch(
+    //     'obj',
+    //     function () {
+    //       console.log(this.obj, '加deep');
+    //     },
+    //     // { deep: true },//深度监听到对象变化
+    //     { immediate: true }, //立即回调当前的值
+    //   );
+    // },
+    methods: {
+      changeObj() {
+        this.obj.name = 'mike';
+        this.arr.push(5);
+        // this.msg = 'world';
+      },
+    },
+  });
+</script>

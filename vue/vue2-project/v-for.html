@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <div id="app">
+      <!-- <div v-for="item in sets"><div v-for="n in even(item)">{{n}}</div></div>  -->
+      <!-- <input v-model="value" @input="input" /> -->
+      <!-- <template v-if="loginType === 'username'">
+        <label>Username</label>
+        <input placeholder="Enter your username" />
+      </template>
+      <template v-else>
+        <label>Email</label>
+        <input placeholder="Enter your email address" />
+      </template> -->
+
+      <button @click="clickBtn">点击</button>
+      <input ref="inputRef" :value="inputValue" @input="inputValue = $event.target.value" />
+
+      <input
+        type="checkbox"
+        id="checkbox"
+        :checked="checkBox"
+        @change="checkBox = $event.target.checked"
+      />
+      <label for="checkbox"></label>
+    </div>
+  </body>
+</html>
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        obj: {
+          name: 'jack',
+          age: 12,
+          sex: '男',
+        },
+        arr: [{ name: 'jack' }, { age: 12 }, { name: 'male' }],
+        arr1: [2, 4, 5, 6, 8],
+        value: '',
+        loginType: 'username',
+        sets: [
+          [1, 2, 3, 4, 5],
+          [6, 7, 8, 9, 10],
+        ],
+        inputValue: '',
+        checkBox: false,
+      };
+    },
+    methods: {
+      // input() {
+      //   let obj = {
+      //     key: this.value,
+      //   };
+      //   this.arr.unshift(obj);
+      // },
+      clickBtn() {
+        // this.loginType = 'email';
+        // let a = this.arr1.map((item) => {
+        //   return item + 4;
+        // });
+        // console.log(a);
+        this.inputValue = 12;
+        this.checkBox = true;
+      },
+      select(e) {
+        console.log(e);
+        this.checkBox = e.target.checked;
+        console.log(this.checkBox);
+      },
+      even(arr) {
+        return arr.filter((item) => {
+          return item > 4;
+        });
+      },
+    },
+  });
+</script>

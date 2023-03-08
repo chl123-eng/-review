@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <button @click="clickBtn">点击</button>
+    <input ref="inputRef" :value="inputValue" @input="inputValue = $event.target.value" />
+
+    <input
+      type="checkbox"
+      id="checkbox"
+      :checked="checkBox"
+      @change="checkBox = $event.target.checked"
+    />
+    <label for="checkbox"></label>
+  </body>
+</html>
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        inputValue: '',
+        checkBox: false,
+      };
+    },
+    methods: {
+      clickBtn() {
+        this.inputValue = 12;
+        this.checkBox = true;
+      },
+    },
+  });
+</script>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <div id="app">
+      <base-input :value="inputValue"></base-input>
+      <button @click="changeBtn">点击</button>
+    </div>
+  </body>
+</html>
+<script>
+  Vue.component('base-input', {
+    props: ['value'],
+    template: '<div>{{value}}</div>',
+  });
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        inputValue: '',
+      };
+    },
+    methods: {
+      changeBtn() {
+        this.inputValue = '点击';
+      },
+    },
+  });
+</script>
