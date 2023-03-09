@@ -1,28 +1,50 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import Layout from '@/layout';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
+    component: Layout,
+    redirect: '/indexView',
+    children: [
+      {
+        path: 'indexView',
+        name: 'indexView',
+        component: () => import('@/views/indexView/index'),
+        meta: { title: '首页', icon: 'el-icon-news' },
+      },
+    ],
   },
+
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    path: '/components',
+    component: Layout,
+    redirect: '/components/avatarUpload',
+    name: '组件',
+    meta: { title: '组件', icon: 'el-icon-menu' },
+    children: [
+      {
+        path: 'avatarUpload',
+        name: '上传',
+        component: () => import('@/views/avatarUpload/index'),
+        meta: { title: '上传', icon: 'el-icon-upload' },
+      },
+      {
+        path: 'table',
+        name: '表格',
+        component: () => import('@/views/table/index'),
+        meta: { title: '表格', icon: 'el-icon-s-grid' },
+      },
+    ],
   },
 ];
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+  // mode: 'history',
+  // base: process.env.BASE_URL,
   routes,
 });
 
