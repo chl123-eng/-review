@@ -6,7 +6,7 @@
       :background-color="variables.menuBg"
       :text-color="variables.menuText"
       :active-text-color="variables.menuActiveText"
-      mode="vertical"
+      :collapse="isCollapse"
     >
       <sidebar-item
         v-for="route in routes"
@@ -21,11 +21,13 @@
 <script>
 import sidebarItem from './sidebarItem';
 import variables from '@/styles/variables.scss';
+import { mapGetters } from 'vuex';
 export default {
   components: {
     sidebarItem,
   },
   computed: {
+    ...mapGetters(['sidebar']),
     variables() {
       return variables;
     },
@@ -39,6 +41,9 @@ export default {
         return meta.activeMenu;
       }
       return path;
+    },
+    isCollapse() {
+      return !this.sidebar.opened;
     },
   },
 };

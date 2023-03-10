@@ -22,6 +22,7 @@ export default {
       return {
         hideSideBar: !this.$store.state.app.sidebar.opened,
         openSideBar: this.$store.state.app.sidebar.opened,
+        withoutAnimation: this.$store.state.app.sidebar.withoutAnimation,
       };
     },
   },
@@ -39,7 +40,13 @@ export default {
     flex: 1;
   }
 }
+
 .hideSideBar {
+  transition: width 0.28s;
   width: 54px !important;
+}
+.openSideBar {
+  transition: width 0.28s;
+  width: 210px !important;
 }
 </style>

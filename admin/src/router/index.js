@@ -23,18 +23,18 @@ const routes = [
     path: '/components',
     component: Layout,
     redirect: '/components/avatarUpload',
-    name: '组件',
+    name: 'components',
     meta: { title: '组件', icon: 'el-icon-menu' },
     children: [
       {
         path: 'avatarUpload',
-        name: '上传',
+        name: 'avatarUpload',
         component: () => import('@/views/avatarUpload/index'),
         meta: { title: '上传', icon: 'el-icon-upload' },
       },
       {
         path: 'table',
-        name: '表格',
+        name: 'table',
         component: () => import('@/views/table/index'),
         meta: { title: '表格', icon: 'el-icon-s-grid' },
       },

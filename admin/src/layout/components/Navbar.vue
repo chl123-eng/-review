@@ -4,7 +4,7 @@
       <div class="hamburger-container" @click="hamburgerClick">
         <i :class="hamburgerIcon" style="font-size: 25px"></i>
       </div>
-      <div class="breadcrumb-container">breadcrumb-container</div>
+      <bread-crumb></bread-crumb>
     </div>
 
     <div class="navbar-right">right-menu</div>
@@ -13,7 +13,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import breadCrumb from '../../components/breadCrumb.vue';
 export default {
+  components: { breadCrumb },
   data() {
     return {
       hamburgerIcon: 'el-icon-s-fold',
