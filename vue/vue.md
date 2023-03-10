@@ -12,7 +12,7 @@ watch:
 
 vue 创建实例后，会经过初始化数据. 编译模板. 挂载 DOM. 渲染编译. 渲染更新. 渲染销毁一系列过程，就是 vue 的生命周期
 
-1. beforeCreate(创前前)：创建实例，但数。据还没初始化，所以不能访问 data. watch. computed 里面的数据
+1. beforeCreate(创前前)：创建实例，但数据还没初始化，所以不能访问 data. watch. computed 里面的数据
 2. created(创建后)：数据初始化完成，可以访问响应式数据，但还没挂载到 DOM，所以不能访问节点。这里可以操作 axios 异步
 3. beforeMount(挂载前)：调用 render 函数，编译模板
 4. mounted(挂载后)：实例挂载到 dom 上，可以访问节点。这里可以获取 vNode 的信息. 异步的结果
@@ -122,3 +122,9 @@ vue 实例会遍历 data 里面的所有属性 property,通过 Object.defindProp
 2. vue 通过$on 绑定
 
 $on、$emit 是基于发布订阅模式的，on 的时候将事件名称保存在事件中心，emit 的时候将事件发布，去执行事件中心的监听器
+
+### Loader 和 Plugin 有什么区别
+
+Loader：直译为"加载器"。Webpack 将一切文件视为模块，但是 webpack 原生是只能解析 js 文件，如果想将其他文件也打包的话，就会用到`loader`。 所以 Loader 的作用是让 webpack 拥有了加载和解析非 JavaScript 文件的能力。 Plugin：直译为"插件"。Plugin 可以扩展 webpack 的功能，让 webpack 具有更多的灵活性。
+
+### 跨域问题

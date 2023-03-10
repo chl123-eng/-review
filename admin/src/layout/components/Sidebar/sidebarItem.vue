@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!item.hidden">
     <template v-if="hasOneChild(item.children, item)">
       <el-menu-item :index="resolvePath(onlyOneChild.path)">
         <item :icon="onlyOneChild.meta.icon" :title="onlyOneChild.meta.title" />

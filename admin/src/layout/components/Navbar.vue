@@ -7,7 +7,22 @@
       <bread-crumb></bread-crumb>
     </div>
 
-    <div class="navbar-right">right-menu</div>
+    <div class="navbar-right">
+      <el-dropdown trigger="click">
+        <el-avatar
+          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+        ></el-avatar>
+        <i class="el-icon-caret-bottom"></i>
+        <el-dropdown-menu>
+          <el-dropdown-item
+            v-for="(item, index) in menuList"
+            :key="index"
+            @click.native="clickMenuItem(item)"
+            >{{ item.title }}</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
   </div>
 </template>
 
@@ -19,6 +34,7 @@ export default {
   data() {
     return {
       hamburgerIcon: 'el-icon-s-fold',
+      menuList: [{ title: '退出' }],
     };
   },
   computed: {
@@ -29,6 +45,15 @@ export default {
     hamburgerClick() {
       this.$store.dispatch('app/toggleSideBar');
       this.hamburgerIcon = this.sidebar.opened ? 'el-icon-s-fold' : 'el-icon-s-unfold';
+    },
+    clickMenuItem(i) {
+      switch (i.title) {
+        case '退出':
+          this.logOut();
+      }
+    },
+    logOut() {
+      this.$router.push({ path: '/login' });
     },
   },
 };
