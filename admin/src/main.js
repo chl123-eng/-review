@@ -9,7 +9,10 @@ import '@/icons';
 Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
-
+if (process.env.NODE_ENV === 'production') {
+  const { mockXHR } = require('../mock');
+  mockXHR();
+}
 new Vue({
   router,
   store,

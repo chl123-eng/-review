@@ -52,7 +52,8 @@ export default {
           this.logOut();
       }
     },
-    logOut() {
+    async logOut() {
+      await this.$store.dispatch('user/logout');
       this.$router.push({ path: '/login' });
     },
   },

@@ -1,11 +1,20 @@
-import { getToken, setToken } from '@/utils/auth';
-import { login } from '@/api/user';
-const state = {
-  token: getToken(),
+import { getToken, setToken, removeToken } from '@/utils/auth';
+import { login, logout } from '@/api/user';
+const getDefaultState = () => {
+  return {
+    token: getToken(),
+    name: '',
+    avatar: '',
+  };
 };
+const state = getDefaultState();
+
 const mutations = {
   SET_TOKEN: (token) => {
     state.token = token;
+  },
+  RESET_STATE: (state) => {
+    Object.assign(state, getDefaultState());
   },
 };
 
@@ -18,11 +27,40 @@ const actions = {
           const { data } = res;
           commit('SET_TOKEN', data.token);
           setToken(data.token);
-          resolve;
+          resolve();
         })
         .catch((err) => {
           reject(err);
         });
     });
   },
+
+  logout({ commit }) {
+    return new Promise((resolve, reject) => {
+      logout(state.token)
+        .then(() => {
+          removeToken();
+          commit('RESET_STATE');
+          resolve();
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  resetToken({ commit }) {
+    return new Promise((resolve) => {
+      removeToken();
+      commit('RESET_STATE');
+      resolve;
+    });
+  },
+};
+
+export default {
+  namespaced: true,
+  state,
+  mutations,
+  actions,
 };
